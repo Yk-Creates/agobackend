@@ -1,17 +1,17 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import mongoose, { Schema } from "mongoose";
 
-const serviceTypes = {
+const serviceTypes = Object.freeze({
   CAB: "cab",
   AMBULANCE: "ambulance",
   COURIER: "courier",
-};
+});
 
-const serviceStatus = {
+const serviceStatus = Object.freeze({
   PLACED: "placed",
   ACCEPTED: "accepted",
   DONE: "done",
-};
+});
+
 const serviceSchema = new Schema(
   {
     type: {
@@ -43,6 +43,6 @@ const serviceSchema = new Schema(
   }
 );
 
-const Service = mongoose.model("Service", serviceSchema);
 
-module.exports = Service;
+
+export const Service = mongoose.model("Service", serviceSchema);
