@@ -1,8 +1,9 @@
-import express from "express";
-import cors from "cors";
-import connectDB from "./db/index.js";
-import dotenv from "dotenv";
 import bodyParser from "body-parser";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import connectDB from "./db/index.js";
+import driverRoutes from "./routes/driverRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/driver", driverRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

@@ -22,3 +22,17 @@ export const loginSchema = Joi.object({
     }),
   password: Joi.string().required(),
 });
+
+
+export const driverSchema = Joi.object({
+  name: Joi.string().required(),
+  phone: Joi.string().required(),
+  carNumber: Joi.string().required(),
+  drivingLicense: Joi.string().required(),
+  aadhaarCard: Joi.string().required(),
+  employmentType: Joi.string().valid(...Object.values(employmentTypes)).required(),
+  carType: Joi.string().valid(...Object.values(carTypes)).required(),
+  carModel: Joi.string().required(),
+  carYear: Joi.number().integer().min(1886).required(),
+  status: Joi.boolean().required(),
+});

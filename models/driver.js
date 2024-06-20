@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const employmentTypes = Object.freeze({
   SALARIED: "Salaried",
@@ -11,7 +11,7 @@ const carTypes = Object.freeze({
   TRAVELLER: "Traveller",
 });
 
-const driverSchema = new Schema(
+const driverSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -72,3 +72,4 @@ const driverSchema = new Schema(
 // });
 
 export const Driver = mongoose.model("Driver", driverSchema);
+
