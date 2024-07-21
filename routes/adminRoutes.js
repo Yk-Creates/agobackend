@@ -15,6 +15,9 @@ router.route("/cab-orders").get(cabOrdersData);
 router.route("/drivers-available").get(driverAvailableForOrders);
 //
 router.route("/drivers-cab-available").get(driverAvailableForOrders);
+
 router.route("/drivers").get(allDrivers);
 router.route("/drivers-allot").post(allotDriver);
+
+
 export default router;

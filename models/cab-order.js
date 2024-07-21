@@ -12,6 +12,12 @@ const cabOrderSchema = new mongoose.Schema(
         type: Number,
         required: true,
       },
+      type: {
+        type: String,
+        enum: ["CAB", "AMBULANCE"],
+        default: "CAB",
+        required: true,
+      },
 
       longitude: {
         type: Number,
