@@ -1,11 +1,11 @@
-import express from "express";
-import cors from "cors";
-import connectDB from "./db/index.js";
-import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import userRoutes from "./routes/userRoutes.js";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import connectDB from "./db/index.js";
+import { default as adminRoutes, default as driverRoutes } from "./routes/adminRoutes.js";
 import cabRoutes from "./routes/cabOrderRoutes.js";
-import adminRoutes from "./routes/adminRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -25,6 +25,8 @@ app.use(bodyParser.json());
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/cab", cabRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/driver", driverRoutes);
+
  
 
 app.get("/", (req, res) => {
