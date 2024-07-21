@@ -99,3 +99,25 @@ export const getActiveRequests = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getAllRequest = async (req, res) => {
+  const { token } = req.headers;
+  if (!token) {
+    return res.status(401).json({ message: "Token is required" });
+  }
+
+  try {
+    const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedUser.userId;
+
+    // Assuming you have a CabOrder model defined
+    const allOrders = await CabOrder.find({
+      user: userId,
+    });
+
+    res.status(200).json(allOrders);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
