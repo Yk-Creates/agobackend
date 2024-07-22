@@ -1,20 +1,20 @@
-import express from 'express';
-import { createDriver, getDriverBookings, getDriverPastBookings, updateDriverStatus } from '../controllers/driver.js';
+// routes/driverRoutes.js
 
+import { Router } from "express";
+import { createDriver, getDriverBookings, getDriverPastBookings, updateDriverStatus } from "../controllers/driver.js";
 
-const router = express.Router();
+const router = Router();
 
 // Route to register a new driver
-router.route('/register').post(createDriver)
-
+router.post("/register", createDriver);
 
 // Route to update driver's status
-router.put('/driver/:driverId/status', updateDriverStatus);
+router.put("/:driverId/status", updateDriverStatus);
 
 // Route to fetch bookings assigned to a driver
-router.get('/driver/:driverId/bookings', getDriverBookings);
+router.get("/:driverId/bookings", getDriverBookings);
 
 // Route to fetch past bookings assigned to a driver
-router.get('/driver/:driverId/past-bookings', getDriverPastBookings);
+router.get("/:driverId/past-bookings", getDriverPastBookings);
 
 export default router;
