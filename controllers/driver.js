@@ -17,11 +17,12 @@ export const createDriver = async (req, res) => {
       carType,
       carModel,
       carYear,
-      status
+      status,
+      password
     } = req.body;
 
     // Validate required fields
-    if (!name || !phone || !carNumber || !drivingLicense || !aadhaarCard || !employmentType || !carType || !carModel || !carYear || status === undefined) {
+    if (!name || !phone || !carNumber || !drivingLicense || !aadhaarCard || !employmentType || !carType || !carModel || !carYear || status === undefined || !password) {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
@@ -50,7 +51,8 @@ export const createDriver = async (req, res) => {
       carType,
       carModel,
       carYear,
-      status
+      status,
+      password // Save the password in plain text
     });
 
     // Save the new driver to database
