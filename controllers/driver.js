@@ -74,6 +74,50 @@ export const createDriver = async (req, res) => {
   }
 };
 
+export const loginDriver = async (req, res) => {
+  try {
+    const { phone, password } = req.body;
+
+    if (!phone || !password) {
+      return res.status(400).json({ error: 'Phone number and password are required' });
+    }
+
+    // Find driver by phone number
+    const driver = await Driver.findOne({ phone });
+    if (!driver) {
+      return res.status(401).json({ error: 'Invalid phone number or password' });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, driver.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid phone number or password' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ id: driver._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      driver: {
+        id: driver._id,
+        name: driver.name,
+        phone: driver.phone,
+        carNumber: driver.carNumber,
+        carModel: driver.carModel,
+        carYear: driver.carYear,
+        carType: driver.carType,
+        status: driver.status,
+        driverType: driver.driverType,
+      },
+    });
+  } catch (error) {
+    console.error('Error logging in driver:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 // Update driver's status
 export const updateDriverStatus = async (req, res) => {
   try {
