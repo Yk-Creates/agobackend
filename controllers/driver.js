@@ -88,9 +88,8 @@ export const loginDriver = async (req, res) => {
       return res.status(401).json({ error: 'Invalid phone number or password' });
     }
 
-    // Check password
-    const isMatch = await bcrypt.compare(password, driver.password);
-    if (!isMatch) {
+    // Check password (assuming plain text comparison)
+    if (password !== driver.password) {
       return res.status(401).json({ error: 'Invalid phone number or password' });
     }
 
