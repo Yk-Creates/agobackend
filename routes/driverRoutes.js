@@ -1,7 +1,7 @@
 // routes/driverRoutes.js
 
 import { Router } from "express";
-import { createDriver, getDriverBookings, getDriverPastBookings, loginDriver, updateDriverStatus } from "../controllers/driver.js";
+import { createDriver, getDriverBookings, getDriverPastBookings, getTodayBookings, loginDriver, updateDriverStatus } from "../controllers/driver.js";
 
 const router = Router();
 
@@ -14,10 +14,15 @@ router.post('/login', loginDriver);
 // Route to update driver's status
 router.put("/:driverId/status", updateDriverStatus);
 
-// Route to fetch bookings assigned to a driver
-router.get("/:driverId/bookings", getDriverBookings);
+// Route to get today's bookings for a driver
+router.get('/bookings/today/:driverId', getTodayBookings);
 
-// Route to fetch past bookings assigned to a driver
-router.get("/:driverId/past-bookings", getDriverPastBookings);
+// Route to get all bookings for a driver
+router.get('/bookings/all/:driverId', getDriverBookings);
+
+// Route to get past bookings for a driver
+router.get('/bookings/past/:driverId', getDriverPastBookings);
+
+
 
 export default router;
