@@ -96,7 +96,6 @@ export const loginDriver = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign({ id: driver._id.toString() }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
     res.status(200).json({
       message: 'Login successful',
       token,
@@ -124,16 +123,16 @@ export const updateDriverStatus = async (req, res) => {
     const { driverId } = req.params;
     const { status } = req.body;
 
-    if (!status) {
+    console.log('Received status:', status); // Add this line to log the received status
+
+    if (status === undefined) {
       return res.status(400).json({ message: "Status is required" });
     }
 
-    // Validate driverId format
     if (!mongoose.Types.ObjectId.isValid(driverId)) {
       return res.status(400).json({ message: "Invalid driver ID format" });
     }
 
-    // Find driver by ID and update status
     const driver = await Driver.findByIdAndUpdate(
       driverId,
       { status },
@@ -150,6 +149,7 @@ export const updateDriverStatus = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
 
 export const getTodayBookings = async (req, res) => {
   try {
