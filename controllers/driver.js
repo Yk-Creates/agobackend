@@ -1,5 +1,6 @@
 // controllers/driver.js
 
+import jwt from 'jsonwebtoken'; // Import the jsonwebtoken library
 import mongoose from 'mongoose';
 import { CabOrder } from "../models/cab-order.js";
 import { Driver } from "../models/driver.js";
