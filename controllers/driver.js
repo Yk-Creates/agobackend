@@ -95,13 +95,13 @@ export const loginDriver = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: driver._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: driver._id.toString() }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.status(200).json({
       message: 'Login successful',
       token,
       driver: {
-        id: driver._id,
+        id: driver._id.toString(),
         name: driver.name,
         phone: driver.phone,
         carNumber: driver.carNumber,
@@ -124,9 +124,13 @@ export const updateDriverStatus = async (req, res) => {
     const { driverId } = req.params;
     const { status } = req.body;
 
-    // Validate status field
-    if (status === undefined) {
+    if (!status) {
       return res.status(400).json({ message: "Status is required" });
+    }
+
+    // Validate driverId format
+    if (!mongoose.Types.ObjectId.isValid(driverId)) {
+      return res.status(400).json({ message: "Invalid driver ID format" });
     }
 
     // Find driver by ID and update status
@@ -142,6 +146,7 @@ export const updateDriverStatus = async (req, res) => {
 
     res.status(200).json({ message: "Driver status updated successfully", driver });
   } catch (error) {
+    console.error('Error updating driver status:', error);
     res.status(500).json({ message: "Server error", error });
   }
 };
