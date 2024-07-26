@@ -6,16 +6,11 @@ const cabOrderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true,
     },
     start: {
       latitude: {
         type: Number,
-        required: true,
-      },
-      type: {
-        type: String,
-        enum: ["CAB", "AMBULANCE"],
-        default: "CAB",
         required: true,
       },
 
@@ -43,6 +38,7 @@ const cabOrderSchema = new mongoose.Schema(
       type: String,
       enum: ["REQUESTED", "ACCEPTED", "COMPLETED"],
       default: "REQUESTED",
+      index: true,
     },
     date: {
       type: String,
@@ -50,6 +46,24 @@ const cabOrderSchema = new mongoose.Schema(
     },
     time: {
       type: String,
+    },
+    fare: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    desc: {
+      type: String,
+    },
+    type: {
+      type: String,
+      enum: ["CAB", "AMBULANCE", "COURRIER"],
+      default: "CAB",
+      required: true,
+    },
+    model: {
+      type: String,
+      enum: ["S", "M", "L"],
     },
   },
 
