@@ -9,7 +9,7 @@ export const dashboardData = async (req, res) => {
     const startOfDay = moment().startOf("day").toDate();
     const endOfDay = moment().endOf("day").toDate();
 
-    // Find orders within the date range
+    // Find all orders within the date range
     const orders = await CabOrder.find({
       createdAt: {
         $gte: startOfDay,
@@ -18,24 +18,60 @@ export const dashboardData = async (req, res) => {
     });
     const cabOrdersNumber = orders.length;
 
+    // Count cab orders within the date range
+    const cabOrdersCount = await CabOrder.countDocuments({
+      type: "CAB",
+      createdAt: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
+
+    // Count ambulance orders within the date range
+    const ambulanceOrdersCount = await CabOrder.countDocuments({
+      type: "AMBULANCE",
+      createdAt: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
+
     // Find the 5 most recent orders
     const fiveMostRecentOrders = await CabOrder.find({})
       .sort({ createdAt: -1 })
       .limit(5)
       .populate("user driver");
+
     return res.status(200).json({
-      cabOrders: cabOrdersNumber,
+      cabOrders: cabOrdersCount,
+      ambulanceOrders: ambulanceOrdersCount,
       fiveMostRecentOrders,
     });
   } catch (error) {
-    console.log("error in admin dashbord data controller");
+    console.log("error in admin dashboard data controller:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 export const cabOrdersData = async (req, res) => {
   try {
-    const orders = await CabOrder.find()
+    const orders = await CabOrder.find({ type: "CAB" })
+      .populate("user")
+      .sort({ createdAt: -1 })
+      .populate("driver");
+
+    return res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching cab orders:", error);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+export const AmbulanceOrdersData = async (req, res) => {
+  try {
+    const orders = await CabOrder.find({ type: "AMBULANCE" })
       .populate("user")
       .sort({ createdAt: -1 })
       .populate("driver");
@@ -105,5 +141,41 @@ export const allotDriver = async (req, res) => {
   } catch (error) {
     console.error("Error allotting driver:", error);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const updateRate = async (req, res) => {
+  const { carType, perKilometerRate } = req.body;
+
+  try {
+    // Validate input
+    if (!carType || !perKilometerRate) {
+      return res
+        .status(400)
+        .json({ message: "Car type and rate are required" });
+    }
+
+    // Check if the car type is valid
+    if (!["small", "medium", "large"].includes(carType)) {
+      return res.status(400).json({ message: "Invalid car type" });
+    }
+
+    // Find and update the rate for the given car type
+    const updatedRate = await Rate.findOneAndUpdate(
+      { carType },
+      { perKilometerRate },
+      { new: true, runValidators: true }
+    );
+
+    // If the car type does not exist, return a 404 error
+    if (!updatedRate) {
+      return res.status(404).json({ message: "Rate not found" });
+    }
+
+    // Return the updated rate
+    res.status(200).json(updatedRate);
+  } catch (error) {
+    console.error("Error updating rate:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 };

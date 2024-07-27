@@ -95,3 +95,5 @@ export const getRate = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+
