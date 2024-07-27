@@ -151,36 +151,6 @@ export const updateDriverStatus = async (req, res) => {
 };
 
 
-export const getTodayBookings = async (req, res) => {
-  try {
-    const { driverId } = req.params;
-    const currentDate = new Date();
-    
-    // Get today's date without time
-    const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    
-    // Validate driverId
-    if (!driverId) {
-      return res.status(400).json({ message: "Driver ID is required" });
-    }
-
-    // Find today's bookings assigned to the driver
-    const todayBookings = await CabOrder.find({
-      driver: driverId,
-      date: { $gte: today, $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000) } // Find bookings for today
-    }).populate('user').populate('driver');
-
-    if (!todayBookings.length) {
-      return res.status(404).json({ message: "No bookings found for this driver today" });
-    }
-
-    res.status(200).json({ message: "Today's bookings retrieved successfully", bookings: todayBookings });
-  } catch (error) {
-    console.error("Error fetching today's bookings:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
 // Get all bookings for a driver
 export const getDriverBookings = async (req, res) => {
   try {
@@ -205,33 +175,20 @@ export const getDriverBookings = async (req, res) => {
   }
 };
 
-// Get driver's past bookings
-export const getDriverPastBookings = async (req, res) => {
+export const getDriverProfile = async (req, res) => {
   try {
-    const { driverId } = req.params;
-    const currentDate = new Date();
-    
-    // Get today's date without time
-    const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const driverId = req.params.id;
+    const driver = await Driver.findById(driverId).select('-password'); // Exclude password field
 
-    // Validate driverId
-    if (!driverId) {
-      return res.status(400).json({ message: "Driver ID is required" });
+    if (!driver) {
+      return res.status(404).json({ message: 'Driver not found' });
     }
 
-    // Find past bookings assigned to the driver
-    const pastBookings = await CabOrder.find({
-      driver: driverId,
-      date: { $lt: today } // Find bookings before today
-    }).populate('user').populate('driver');
-
-    if (!pastBookings.length) {
-      return res.status(404).json({ message: "No past bookings found for this driver" });
-    }
-
-    res.status(200).json({ message: "Past bookings retrieved successfully", bookings: pastBookings });
+    res.status(200).json(driver);
   } catch (error) {
-    console.error("Error fetching past bookings:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
+
+
