@@ -63,6 +63,10 @@ const driverSchema = new mongoose.Schema(
       type: String,
       enum: ["cab", "ambulance"],
     },
+    password: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
