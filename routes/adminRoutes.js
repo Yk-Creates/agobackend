@@ -4,6 +4,7 @@ import {
   allotDriver,
   AmbulanceOrdersData,
   cabOrdersData,
+  changePrice,
   dashboardData,
   driverAvailableForOrders,
   updateRate,
@@ -22,9 +23,9 @@ router.route("/ambulance-orders").get(AmbulanceOrdersData);
 router.route("/drivers").get(allDrivers);
 router.route("/drivers-allot").post(allotDriver);
 
+// router.route("/update-rates").patch(updateRate);
+router.route("/update-price").patch(changePrice);
+
 router.route("/update-rates").patch(updateRate);
-
- 
-
 
 export default router;

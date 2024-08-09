@@ -179,3 +179,30 @@ export const updateRate = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+export const changePrice = async (req, res) => {
+  try {
+    const { price, id } = req.body;
+
+    // Validate the input
+    if (!price || !id) {
+      return res.status(400).json({ message: "Price and ID are required" });
+    }
+
+    // Find the cab order by ID
+    const cabOrder = await CabOrder.findById(id);
+
+    if (!cabOrder) {
+      return res.status(404).json({ message: "Cab order not found" });
+    }
+
+    // Update the fare
+    cabOrder.fare = price;
+    await cabOrder.save();
+
+    res.status(200).json({ message: "Price changed successfully", cabOrder });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
